@@ -1,0 +1,17 @@
+[
+  {
+    "productId": "A",
+    "title": "The SlimCase",
+    "price": 899
+  },
+  {
+    "productId": "B",
+    "title": "MOO Hardcover Noteook",
+    "price": 1499
+  },
+  {
+    "productId": "C",
+    "title": "MOO Softcover Journal",
+    "price": 575
+  }
+]
