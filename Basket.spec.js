@@ -1,4 +1,4 @@
-import Basket from './index'
+import Basket from './Basket'
 import catalog from './catalog.json'
 
 describe('Basket', () => {
@@ -6,6 +6,22 @@ describe('Basket', () => {
     it('should load a catalog', () => {
       const basket = new Basket(catalog)
       expect(basket.catalog).toEqual(catalog)
+    })
+  })
+
+  describe('getProductPrice', () => {
+    describe('given a productId in the catalog', () => {
+      it('should return its price', () => {
+        const basket = new Basket(catalog)
+        expect(basket.getProductPrice('A')).toBe(899)
+      })
+    })
+
+    describe('given a productId not in the catalog', () => {
+      it('should throw an error', () => {
+        const basket = new Basket(catalog)
+        expect(() => basket.getProductPrice('D')).toThrow('Item not in catalog')
+      })
     })
   })
 
@@ -26,7 +42,7 @@ describe('Basket', () => {
   })
 
   describe('addItem', () => {
-    describe('given a correct productId ', () => {
+    describe('given a productId in the catalog', () => {
       it('should add an item', () => {
         const basket = new Basket(catalog)
         expect(basket.items).toEqual([])
@@ -59,31 +75,71 @@ describe('Basket', () => {
         ])
       })
     })
+
+    describe('given a productId not in the catalog', () => {
+      it('should throw an error', () => {
+        const basket = new Basket(catalog)
+        expect(() => basket.addItem('D', 1)).toThrowError('Item not in catalog')
+      })
+    })
   })
 
   describe('deleteItem', () => {
-    it('should remove an item', () => {
-      const basket = new Basket(catalog)
-      basket.items = [
-        {
-          productId: 'A',
-          quantity: 1,
-          totalPrice: 899
-        },
-        {
-          productId: 'B',
-          quantity: 1,
-          totalPrice: 1499
-        }
-      ]
-      basket.deleteItem('A')
-      expect(basket.items).toEqual([
-        {
-          productId: 'B',
-          quantity: 1,
-          totalPrice: 1499
-        }
-      ])
+    describe('given a productId in the basket', () => {
+      it('should remove an item', () => {
+        const basket = new Basket(catalog)
+        basket.items = [
+          {
+            productId: 'A',
+            quantity: 1,
+            totalPrice: 899
+          },
+          {
+            productId: 'B',
+            quantity: 1,
+            totalPrice: 1499
+          }
+        ]
+        basket.deleteItem('A')
+        expect(basket.items).toEqual([
+          {
+            productId: 'B',
+            quantity: 1,
+            totalPrice: 1499
+          }
+        ])
+      })
+    })
+
+    describe('given a productId not in the basket', () => {
+      it('should do nothing', () => {
+        const basket = new Basket(catalog)
+        basket.items = [
+          {
+            productId: 'A',
+            quantity: 1,
+            totalPrice: 899
+          },
+          {
+            productId: 'B',
+            quantity: 1,
+            totalPrice: 1499
+          }
+        ]
+        basket.deleteItem('C')
+        expect(basket.items).toEqual([
+          {
+            productId: 'A',
+            quantity: 1,
+            totalPrice: 899
+          },
+          {
+            productId: 'B',
+            quantity: 1,
+            totalPrice: 1499
+          }
+        ])
+      })
     })
   })
 

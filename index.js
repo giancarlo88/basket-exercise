@@ -1,49 +1,32 @@
-export default class Basket {
-  constructor(catalog) {
-    this.catalog = catalog
-    this.items = []
-  }
+const Basket = require('./Basket')
+const catalog = require('./catalog.json')
 
-  getBasket() {
-    return this.items
-  }
+const basket = new Basket(catalog)
 
-  addItem(productId, quantity) {
-    const price = this.catalog.find((item) => item.productId === productId).price
-    const existingIndex = this.items.findIndex((item) => item.productId === productId)
-    if (existingIndex >= 0) {
-      this.items[existingIndex] = {
-        quantity: this.items[existingIndex].quantity + quantity,
-        totalPrice: (this.items[existingIndex].quantity + quantity) * price,
-        productId: this.items[existingIndex].productId
-      }
-    } else {
-      this.items.push({
-        quantity,
-        productId,
-        totalPrice: price * quantity
-      })
-    }
-  }
+console.log('Here is an empty basket:\n', basket.getBasket()) // Should be an empty array
 
-  deleteItem(productId) {
-    const existingIndex = this.items.findIndex((item) => item.productId === productId)
-    this.items = [...this.items.slice(0, existingIndex), ...this.items.slice(existingIndex + 1, this.items.length)]
-  }
+basket.addItem('B', 2)
 
-  getTotal() {
-    return this.items.reduce((total, item) => total + item.totalPrice, 0)
-  }
+console.log("\nI've added 2 of item B:\n", basket.getBasket()) // Should now have 2 of item B
 
-  changeQuantity(productId, newQuantity) {
-    const price = this.catalog.find((item) => item.productId === productId).price
-    const existingIndex = this.items.findIndex((item) => item.productId === productId)
-    this.items[existingIndex] = {
-      productId,
-      quantity: newQuantity,
-      totalPrice: price * newQuantity
-    }
-  }
+basket.addItem('A', 3)
 
+console.log("\nI've added 3 of item A:\n", basket.getBasket()) // Should now have 2 of item B and 3 of item A
 
-}
+console.log('\nMy total is now:', basket.getTotal()) // Should be 5695
+
+basket.deleteItem('A')
+
+console.log("\nI've deleted item A:\n", basket.getBasket())
+
+console.log('\nMy total is now:', basket.getTotal()) // Should be 5695
+
+basket.changeQuantity('B', 1)
+
+console.log("\n I change my quantity of item B to 1:\n", basket.getBasket())
+
+basket.addItem('B', 4)
+
+console.log("\n I add more of B and they get merged together:\n", basket.getBasket())
+
+console.log('\nMy total is now:', basket.getTotal()) // Should be 5695
